@@ -24,10 +24,20 @@
     body{
       margin:0;
       font-family:'Inter',sans-serif;
-      background:linear-gradient(180deg,var(--pesca),var(--crema));
+      background:url("sfondo.jpg") center/cover no-repeat fixed;
       color:var(--testo);
       overflow-x:hidden;
       min-height:100vh;
+      position:relative;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.10);
+      z-index:0;
+      pointer-events:none;
     }
 
     /* FIORI CADENTI */
@@ -62,7 +72,6 @@
       }
     }
 
-    /* CONTENUTO */
     .page{
       position:relative;
       z-index:1;
@@ -88,11 +97,55 @@
     }
 
     .card{
-      background:white;
+      background:rgba(255,255,255,0.96);
       margin:15px;
       padding:20px;
       border-radius:18px;
       box-shadow:0 10px 25px rgba(0,0,0,0.08);
+      backdrop-filter:blur(2px);
+    }
+
+    .card h3{
+      margin-top:0;
+    }
+
+    .intro-text{
+      text-align:center;
+      line-height:1.7;
+      font-size:16px;
+      margin:0 0 16px;
+    }
+
+    .location-title{
+      font-family:'Playfair Display',serif;
+      color:var(--viola);
+      font-size:22px;
+      margin:0 0 10px;
+      text-align:center;
+    }
+
+    .location-address{
+      text-align:center;
+      font-size:15px;
+      line-height:1.6;
+      margin:0 0 14px;
+    }
+
+    .map-frame{
+      width:100%;
+      height:260px;
+      border:0;
+      border-radius:14px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+      background:#f5f5f5;
+    }
+
+    .divider{
+      width:64px;
+      height:2px;
+      background:rgba(140,58,93,0.25);
+      margin:20px auto;
+      border-radius:999px;
     }
 
     .error-box{
@@ -256,16 +309,52 @@
     <div id="errorBox" class="error-box"></div>
 
     <div class="card">
-      <p style="text-align:center; margin:0;">
-        10 Ottobre 2026<br>
-        Santarcangelo di Romagna<br><br>
-        Cerimonia ore 11:30<br>
-        Ricevimento Agriturismo Le Antiche Macine
+      <p class="intro-text">
+        Siamo lieti di invitarti al nostro matrimonio che si terrà
+        <strong>sabato 10 ottobre 2026</strong> presso la
+        <strong>Sala Consiliare “Maria Cristina Garattoni”</strong>
+        del Comune di <strong>Santarcangelo di Romagna</strong>.
       </p>
+
+      <h3 class="location-title">Cerimonia</h3>
+      <p class="location-address">
+        Sala Consiliare “Maria Cristina Garattoni”<br>
+        Residenza Municipale, Piazza Ganganelli 1<br>
+        Santarcangelo di Romagna
+      </p>
+
+      <iframe
+        class="map-frame"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=Piazza%20Ganganelli%201%2C%20Santarcangelo%20di%20Romagna&output=embed"
+        title="Mappa Sala Consiliare Maria Cristina Garattoni">
+      </iframe>
+
+      <div class="divider"></div>
+
+      <p class="intro-text" style="margin-bottom:12px;">
+        A seguire celebreremo presso <strong>Locanda Antiche Macine</strong>.
+      </p>
+
+      <h3 class="location-title">Ricevimento</h3>
+      <p class="location-address">
+        Locanda Antiche Macine<br>
+        Via Provinciale Sogliano 1540<br>
+        Santarcangelo di Romagna
+      </p>
+
+      <iframe
+        class="map-frame"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=Via%20Provinciale%20Sogliano%201540%2C%20Santarcangelo%20di%20Romagna&output=embed"
+        title="Mappa Locanda Antiche Macine">
+      </iframe>
     </div>
 
     <div class="card">
-      <h3 style="margin-top:0;">Conferma presenza</h3>
+      <h3>Conferma presenza</h3>
       <div id="guests"></div>
       <p class="helper">➕ Usa il tasto sotto per aggiungere altri invitati</p>
     </div>
