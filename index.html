@@ -3,11 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Federica & Eugenio</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --viola:#8C3A5D;
@@ -21,6 +18,25 @@ body{
   background:linear-gradient(180deg,var(--pesca),var(--crema));
   color:#2E2A26;
   overflow-x:hidden;
+}
+
+/* FIORI LATERALI ANIMATI */
+.fiore{
+  position:absolute;
+  width:60px;
+  opacity:0.8;
+  animation-name:fluttuante;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  z-index:0;
+}
+
+@keyframes fluttuante{
+  0%   {transform: translateY(0px) translateX(0px) rotate(0deg);}
+  25%  {transform: translateY(20px) translateX(5px) rotate(5deg);}
+  50%  {transform: translateY(40px) translateX(0px) rotate(0deg);}
+  75%  {transform: translateY(20px) translateX(-5px) rotate(-5deg);}
+  100% {transform: translateY(0px) translateX(0px) rotate(0deg);}
 }
 
 /* PETALI */
@@ -58,116 +74,34 @@ body{
 }
 
 /* HERO */
-.hero{
-  text-align:center;
-  padding:40px 20px;
-  position:relative;
-  z-index:1;
-}
-
-.hero h1{
-  font-family:'Playfair Display',serif;
-  font-size:28px;
-  color:white;
-  margin-top:50px;
-}
-
-.quote{
-  font-family:'Playfair Display',serif;
-  color:white;
-  font-size:18px;
-}
+.hero{text-align:center;padding:40px 20px;position:relative;z-index:1;}
+.hero h1{font-family:'Playfair Display',serif;font-size:28px;color:white;margin-top:50px;}
+.quote{font-family:'Playfair Display',serif;color:white;font-size:18px;}
 
 /* CARD */
-.card{
-  background:white;
-  margin:15px;
-  padding:20px;
-  border-radius:18px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.08);
-  position:relative;
-  z-index:1;
-}
+.card{background:white;margin:15px;padding:20px;border-radius:18px;box-shadow:0 10px 25px rgba(0,0,0,0.08);position:relative;z-index:1;}
 
 /* INPUT */
-input, select, textarea{
-  width:100%;
-  padding:12px;
-  margin-top:6px;
-  margin-bottom:12px;
-  border-radius:10px;
-  border:1px solid #eee;
-  background:#FAFAFA;
-}
-
-input:focus, select:focus{
-  outline:none;
-  border-color:var(--viola);
-}
+input, select, textarea{width:100%;padding:12px;margin-top:6px;margin-bottom:12px;border-radius:10px;border:1px solid #eee;background:#FAFAFA;}
+input:focus, select:focus{outline:none;border-color:var(--viola);}
 
 /* GUEST */
-.guest{
-  background:#FFFBF7;
-  border:1px solid #F1E6D9;
-  padding:15px;
-  border-radius:14px;
-  margin-bottom:15px;
-  position:relative;
-}
-
-.remove-btn{
-  position:absolute;
-  top:10px;
-  right:10px;
-  background:#E07A5F;
-  border:none;
-  color:white;
-  border-radius:6px;
-  font-size:12px;
-  padding:4px 8px;
-}
-
-.label{
-  font-size:13px;
-  opacity:0.7;
-}
+.guest{background:#FFFBF7;border:1px solid #F1E6D9;padding:15px;border-radius:14px;margin-bottom:15px;position:relative;}
+.remove-btn{position:absolute;top:10px;right:10px;background:#E07A5F;border:none;color:white;border-radius:6px;font-size:12px;padding:4px 8px;}
+.label{font-size:13px;opacity:0.7;}
 
 /* BOTTONI */
-.bottom-bar{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  display:flex;
-  gap:10px;
-  padding:12px;
-  background:white;
-  box-shadow:0 -5px 20px rgba(0,0,0,0.1);
-  z-index:2;
-}
-
-button{
-  flex:1;
-  padding:14px;
-  border:none;
-  border-radius:10px;
-}
-
-.primary{
-  background:var(--viola);
-  color:white;
-}
-
-.secondary{
-  background:#eee;
-}
-
+.bottom-bar{position:fixed;bottom:0;width:100%;display:flex;gap:10px;padding:12px;background:white;box-shadow:0 -5px 20px rgba(0,0,0,0.1);z-index:2;}
+button{flex:1;padding:14px;border:none;border-radius:10px;}
+.primary{background:var(--viola);color:white;}
+.secondary{background:#eee;}
 .spacer{height:100px;}
 </style>
 </head>
-
 <body>
 
-<div class="petali-container" id="petali"></div>
+<div id="petali-container" class="petali-container"></div>
+<div id="fiori-container"></div>
 
 <div class="hero">
   <div class="quote">Quando si è felici bisogna farci caso</div>
@@ -186,9 +120,7 @@ button{
 <div class="card">
   <h3>Conferma presenza</h3>
   <div id="guests"></div>
-  <p style="text-align:center;font-size:13px;opacity:0.7;">
-    ➕ Usa il tasto sotto per aggiungere altri invitati
-  </p>
+  <p style="text-align:center;font-size:13px;opacity:0.7;">➕ Usa il tasto sotto per aggiungere altri invitati</p>
 </div>
 
 <div class="spacer"></div>
@@ -198,136 +130,9 @@ button{
   <button class="primary" onclick="invia()">Invia</button>
 </div>
 
-<script>
-const apiURL="https://script.google.com/macros/s/AKfycbwZfl2AzksQTnXMpi2tqZUr9ZrHUHAb9XMqIl2EA6iSVRYqVLe2Y-Cax7RCjHTvCzbOCQ/exec";
-let firstGuestBambini=true;
-
-/* PETALI */
-function creaPetalo(){
-  const petalo=document.createElement("div");
-  petalo.className="petalo";
-
-  petalo.style.left=Math.random()*100+"vw";
-
-  const durata=6+Math.random()*6;
-  petalo.style.animationDuration=durata+"s";
-
-  const size=10+Math.random()*12;
-  petalo.style.width=size+"px";
-  petalo.style.height=size*1.4+"px";
-
-  const colori=["#ffffff","#f8eaea","#f3e5f5"];
-  petalo.style.background=colori[Math.floor(Math.random()*colori.length)];
-
-  document.getElementById("petali").appendChild(petalo);
-
-  setTimeout(()=>petalo.remove(),durata*1000);
-}
-setInterval(creaPetalo,350);
-
-/* FORM */
-function aggiungiInvitato(){
-  const container=document.getElementById("guests");
-  const div=document.createElement("div");
-  div.className="guest";
-
-  let html=`
-<input class="nome" placeholder="Nome">
-<input class="cognome" placeholder="Cognome">
-
-<select class="presenza">
-<option value="SI">Parteciperò</option>
-<option value="NO">Non partecipo</option>
-</select>
-
-<select class="menu">
-<option value="">Menu</option>
-<option value="Carne">Carne</option>
-<option value="Vegetariano">Vegetariano</option>
-</select>
-
-<textarea class="intolleranze" placeholder="Allergie/intolleranze"></textarea>
-`;
-
-  if(firstGuestBambini){
-    html+=`
-<label class="label">Numero bambini (<6 anni)</label>
-<input class="bambini" type="number" min="0">
-
-<label class="label">Numero di Seggioloni necessari</label>
-<input class="seggiolone" type="number" min="0" value="0">
-`;
-  } else {
-    html+=`<button class="remove-btn" onclick="rimuoviInvitato(this)">✖</button>`;
-  }
-
-  div.innerHTML=html;
-  container.appendChild(div);
-
-  const presenza=div.querySelector(".presenza");
-  const menu=div.querySelector(".menu");
-
-  presenza.addEventListener("change",()=>{
-    menu.style.display = presenza.value==="SI" ? "block":"none";
-    if(presenza.value!=="SI") menu.value="";
-  });
-
-  if(firstGuestBambini){
-    const bambini=div.querySelector(".bambini");
-    const seggiolone=div.querySelector(".seggiolone");
-
-    seggiolone.style.display="none";
-
-    bambini.addEventListener("input",()=>{
-      const val=parseInt(bambini.value)||0;
-      if(val>0){
-        seggiolone.style.display="block";
-      }else{
-        seggiolone.style.display="none";
-        seggiolone.value=0;
-      }
-    });
-
-    firstGuestBambini=false;
-  }
-}
-
-window.onload=()=>aggiungiInvitato();
-
-function rimuoviInvitato(btn){
-  btn.parentElement.remove();
-}
-
-async function invia(){
-  const guests=document.querySelectorAll(".guest");
-
-  for(const [i,g] of Array.from(guests).entries()){
-    const bambini=parseInt(g.querySelector(".bambini")?.value||0);
-    const seggiolone=parseInt(g.querySelector(".seggiolone")?.value||0);
-
-    if(seggiolone>bambini){
-      alert("Seggioloni non validi");
-      return;
-    }
-
-    await fetch(apiURL,{
-      method:"POST",
-      body:JSON.stringify({
-        key:"matrimonio-2026-federica-eugenio",
-        nome:g.querySelector(".nome").value,
-        cognome:g.querySelector(".cognome").value,
-        presenza:g.querySelector(".presenza").value,
-        menu:g.querySelector(".menu").value,
-        intolleranze:g.querySelector(".intolleranze").value,
-        bambini:(i===0?bambini:0),
-        seggiolone:(i===0?seggiolone:0)
-      })
-    });
-  }
-
-  window.location.href="grazie.html";
-}
-</script>
+<!-- SCRIPT -->
+<script src="config.js"></script>
+<script src="main.js"></script>
 
 </body>
 </html>
