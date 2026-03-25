@@ -1,28 +1,299 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benvenuti</title>
-    <style>
-        body {
-            background-color: #f3e6f5;
-            color: #721c24;
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            padding: 50px;
-        }
-        h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.5em;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Federica & Eugenio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --viola:#8C3A5D;
+  --pesca:#F2B38A;
+  --crema:#FFF8F2;
+  --verde:#6E8B74;
+}
+
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(180deg,var(--pesca),var(--crema));
+  color:#2E2A26;
+}
+
+/* HERO */
+.hero{
+  text-align:center;
+  padding:40px 20px 30px;
+  position:relative;
+}
+
+/* TRIANGOLO CENTRALE */
+.hero::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:120px solid transparent;
+  border-right:120px solid transparent;
+  border-bottom:200px solid var(--viola);
+  opacity:0.9;
+  z-index:0;
+}
+
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  position:relative;
+  z-index:1;
+  color:white;
+  margin-top:60px;
+}
+
+.quote{
+  font-family:'Playfair Display',serif;
+  font-size:18px;
+  color:white;
+  position:relative;
+  z-index:1;
+  margin-top:10px;
+}
+
+/* CARD */
+.card{
+  background:white;
+  margin:15px;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* FIORI DECORATIVI */
+.card::before{
+  content:"🌸";
+  position:absolute;
+  font-size:22px;
+  opacity:0.3;
+}
+
+/* INPUT */
+input, select, textarea{
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  margin-bottom:12px;
+  border-radius:10px;
+  border:1px solid #eee;
+  background:#FAFAFA;
+}
+
+input:focus, select:focus{
+  outline:none;
+  border-color:var(--viola);
+}
+
+/* GUEST */
+.guest{
+  background:#FFFBF7;
+  border:1px solid #F1E6D9;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:15px;
+  position:relative;
+}
+
+.remove-btn{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#E07A5F;
+  border:none;
+  color:white;
+  border-radius:6px;
+  font-size:12px;
+  padding:4px 8px;
+}
+
+/* BOTTONI */
+.bottom-bar{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  gap:10px;
+  padding:12px;
+  background:white;
+  box-shadow:0 -5px 20px rgba(0,0,0,0.1);
+}
+
+button{
+  flex:1;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  font-weight:500;
+}
+
+.primary{
+  background:var(--viola);
+  color:white;
+}
+
+.secondary{
+  background:#eee;
+}
+
+.spacer{height:100px;}
+
+.label{
+  font-size:13px;
+  opacity:0.7;
+}
+</style>
 </head>
+
 <body>
-    <h1>Benvenuti</h1>
-    <p>Benvenuti al matrimonio!</p>
+
+<div class="hero">
+  <div class="quote">Quando si è felici<br>bisogna farci caso</div>
+  <h1>Federica & Eugenio</h1>
+</div>
+
+<div class="card">
+  <p style="text-align:center">
+    10 Ottobre 2026<br>
+    Santarcangelo di Romagna<br><br>
+    Cerimonia ore 11:30<br>
+    Ricevimento Agriturismo Le Antiche Macine
+  </p>
+</div>
+
+<div class="card">
+  <h3>Conferma presenza</h3>
+  <div id="guests"></div>
+  <p style="text-align:center;font-size:13px;opacity:0.7;">
+    ➕ Usa il tasto sotto per aggiungere altri invitati
+  </p>
+</div>
+
+<div class="spacer"></div>
+
+<div class="bottom-bar">
+  <button class="secondary" onclick="aggiungiInvitato()">+ Invitato</button>
+  <button class="primary" onclick="invia()">Invia</button>
+</div>
+
+<script>
+const apiURL="https://script.google.com/macros/s/AKfycbwZfl2AzksQTnXMpi2tqZUr9ZrHUHAb9XMqIl2EA6iSVRYqVLe2Y-Cax7RCjHTvCzbOCQ/exec";
+let firstGuestBambini=true;
+
+function aggiungiInvitato(){
+  const container=document.getElementById("guests");
+  const div=document.createElement("div");
+  div.className="guest";
+
+  let html=`
+<input class="nome" placeholder="Nome">
+<input class="cognome" placeholder="Cognome">
+
+<select class="presenza">
+<option value="SI">Parteciperò</option>
+<option value="NO">Non partecipo</option>
+</select>
+
+<select class="menu">
+<option value="">Menu</option>
+<option value="Carne">Carne</option>
+<option value="Vegetariano">Vegetariano</option>
+</select>
+
+<textarea class="intolleranze" placeholder="Allergie/intolleranze"></textarea>
+`;
+
+  if(firstGuestBambini){
+    html+=`
+<label class="label">Numero bambini (<6 anni)</label>
+<input class="bambini" type="number" min="0">
+
+<label class="label">Numero di Seggioloni necessari</label>
+<input class="seggiolone" type="number" min="0" value="0">
+`;
+  } else {
+    html+=`<button class="remove-btn" onclick="rimuoviInvitato(this)">✖</button>`;
+  }
+
+  div.innerHTML=html;
+  container.appendChild(div);
+
+  const presenza=div.querySelector(".presenza");
+  const menu=div.querySelector(".menu");
+
+  presenza.addEventListener("change",()=>{
+    menu.style.display = presenza.value==="SI" ? "block":"none";
+    if(presenza.value!=="SI") menu.value="";
+  });
+
+  if(firstGuestBambini){
+    const bambini=div.querySelector(".bambini");
+    const seggiolone=div.querySelector(".seggiolone");
+
+    seggiolone.style.display="none";
+
+    bambini.addEventListener("input",()=>{
+      const val=parseInt(bambini.value)||0;
+      if(val>0){
+        seggiolone.style.display="block";
+      }else{
+        seggiolone.style.display="none";
+        seggiolone.value=0;
+      }
+    });
+
+    firstGuestBambini=false;
+  }
+}
+
+window.onload=()=>aggiungiInvitato();
+
+function rimuoviInvitato(btn){
+  btn.parentElement.remove();
+}
+
+async function invia(){
+  const guests=document.querySelectorAll(".guest");
+
+  for(const [i,g] of Array.from(guests).entries()){
+    const bambini=parseInt(g.querySelector(".bambini")?.value||0);
+    const seggiolone=parseInt(g.querySelector(".seggiolone")?.value||0);
+
+    if(seggiolone>bambini){
+      alert("Seggioloni non validi");
+      return;
+    }
+
+    await fetch(apiURL,{
+      method:"POST",
+      body:JSON.stringify({
+        key:"matrimonio-2026-federica-eugenio",
+        nome:g.querySelector(".nome").value,
+        cognome:g.querySelector(".cognome").value,
+        presenza:g.querySelector(".presenza").value,
+        menu:g.querySelector(".menu").value,
+        intolleranze:g.querySelector(".intolleranze").value,
+        bambini:(i===0?bambini:0),
+        seggiolone:(i===0?seggiolone:0)
+      })
+    });
+  }
+
+  window.location.href="grazie.html";
+}
+</script>
+
 </body>
 </html>
