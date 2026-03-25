@@ -13,7 +13,6 @@
   --viola:#8C3A5D;
   --pesca:#F2B38A;
   --crema:#FFF8F2;
-  --verde:#6E8B74;
 }
 
 body{
@@ -21,47 +20,62 @@ body{
   font-family:'Inter',sans-serif;
   background:linear-gradient(180deg,var(--pesca),var(--crema));
   color:#2E2A26;
+  overflow-x:hidden;
+}
+
+/* PETALI */
+.petali-container{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
+}
+
+.petalo{
+  position:absolute;
+  top:-50px;
+  width:14px;
+  height:20px;
+  border-radius:50%;
+  opacity:0.85;
+  animation:caduta linear infinite;
+}
+
+@keyframes caduta{
+  0%{
+    transform:translateY(0) translateX(0) rotate(0deg);
+    opacity:0;
+  }
+  10%{opacity:0.9;}
+  100%{
+    transform:translateY(110vh) translateX(80px) rotate(360deg);
+    opacity:0;
+  }
 }
 
 /* HERO */
 .hero{
   text-align:center;
-  padding:40px 20px 30px;
+  padding:40px 20px;
   position:relative;
-}
-
-/* TRIANGOLO CENTRALE */
-.hero::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:0;
-  height:0;
-  border-left:120px solid transparent;
-  border-right:120px solid transparent;
-  border-bottom:200px solid var(--viola);
-  opacity:0.9;
-  z-index:0;
+  z-index:1;
 }
 
 .hero h1{
   font-family:'Playfair Display',serif;
   font-size:28px;
-  position:relative;
-  z-index:1;
   color:white;
-  margin-top:60px;
+  margin-top:50px;
 }
 
 .quote{
   font-family:'Playfair Display',serif;
-  font-size:18px;
   color:white;
-  position:relative;
-  z-index:1;
-  margin-top:10px;
+  font-size:18px;
 }
 
 /* CARD */
@@ -71,14 +85,8 @@ body{
   padding:20px;
   border-radius:18px;
   box-shadow:0 10px 25px rgba(0,0,0,0.08);
-}
-
-/* FIORI DECORATIVI */
-.card::before{
-  content:"🌸";
-  position:absolute;
-  font-size:22px;
-  opacity:0.3;
+  position:relative;
+  z-index:1;
 }
 
 /* INPUT */
@@ -119,6 +127,11 @@ input:focus, select:focus{
   padding:4px 8px;
 }
 
+.label{
+  font-size:13px;
+  opacity:0.7;
+}
+
 /* BOTTONI */
 .bottom-bar{
   position:fixed;
@@ -129,6 +142,7 @@ input:focus, select:focus{
   padding:12px;
   background:white;
   box-shadow:0 -5px 20px rgba(0,0,0,0.1);
+  z-index:2;
 }
 
 button{
@@ -136,7 +150,6 @@ button{
   padding:14px;
   border:none;
   border-radius:10px;
-  font-weight:500;
 }
 
 .primary{
@@ -149,18 +162,15 @@ button{
 }
 
 .spacer{height:100px;}
-
-.label{
-  font-size:13px;
-  opacity:0.7;
-}
 </style>
 </head>
 
 <body>
 
+<div class="petali-container" id="petali"></div>
+
 <div class="hero">
-  <div class="quote">Quando si è felici<br>bisogna farci caso</div>
+  <div class="quote">Quando si è felici bisogna farci caso</div>
   <h1>Federica & Eugenio</h1>
 </div>
 
@@ -192,6 +202,30 @@ button{
 const apiURL="https://script.google.com/macros/s/AKfycbwZfl2AzksQTnXMpi2tqZUr9ZrHUHAb9XMqIl2EA6iSVRYqVLe2Y-Cax7RCjHTvCzbOCQ/exec";
 let firstGuestBambini=true;
 
+/* PETALI */
+function creaPetalo(){
+  const petalo=document.createElement("div");
+  petalo.className="petalo";
+
+  petalo.style.left=Math.random()*100+"vw";
+
+  const durata=6+Math.random()*6;
+  petalo.style.animationDuration=durata+"s";
+
+  const size=10+Math.random()*12;
+  petalo.style.width=size+"px";
+  petalo.style.height=size*1.4+"px";
+
+  const colori=["#ffffff","#f8eaea","#f3e5f5"];
+  petalo.style.background=colori[Math.floor(Math.random()*colori.length)];
+
+  document.getElementById("petali").appendChild(petalo);
+
+  setTimeout(()=>petalo.remove(),durata*1000);
+}
+setInterval(creaPetalo,350);
+
+/* FORM */
 function aggiungiInvitato(){
   const container=document.getElementById("guests");
   const div=document.createElement("div");
