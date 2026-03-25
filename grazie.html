@@ -10,49 +10,185 @@
   <style>
     :root{
       --viola:#8C3A5D;
-      --pesca:#F2B38A;
-      --crema:#FFF8F2;
+      --testo:#2E2A26;
+    }
+
+    *{
+      box-sizing:border-box;
     }
 
     body{
       margin:0;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
       font-family:'Inter',sans-serif;
-      background:linear-gradient(180deg,var(--pesca),var(--crema));
-      color:#2E2A26;
-      padding:24px;
-      box-sizing:border-box;
+      background:url("sfondo.jpg") center/cover no-repeat;
+      color:var(--testo);
+      overflow:hidden;
+      min-height:100vh;
+      position:relative;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.12);
+      z-index:0;
+    }
+
+    /* FIORI CADENTI */
+    #fiori-container{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:1;
+    }
+
+    .fiore-cadente{
+      position:absolute;
+      top:-80px;
+      animation-name:cadutaFiore;
+      animation-timing-function:linear;
+      animation-iteration-count:1;
+      filter:drop-shadow(0 4px 10px rgba(255,255,255,0.25));
+    }
+
+    @keyframes cadutaFiore{
+      0%{
+        transform:translateY(-10vh) translateX(0) rotate(0deg);
+        opacity:0;
+      }
+      10%{
+        opacity:0.9;
+      }
+      100%{
+        transform:translateY(115vh) translateX(var(--drift-x, 40px)) rotate(var(--rot-end, 45deg));
+        opacity:0;
+      }
+    }
+
+    /* HERO */
+    .hero{
+      text-align:center;
+      padding:40px 20px 10px;
+      position:relative;
+      z-index:2;
+    }
+
+    .hero h1{
+      font-family:'Playfair Display',serif;
+      font-size:30px;
+      color:white;
+      margin:10px 0 0;
+    }
+
+    .quote{
+      font-family:'Playfair Display',serif;
+      color:white;
+      font-size:18px;
+    }
+
+    /* CARD */
+    .container{
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:20px;
+      position:relative;
+      z-index:2;
     }
 
     .card{
-      background:white;
-      max-width:420px;
+      background:rgba(255,255,255,0.96);
       width:100%;
-      padding:32px 24px;
+      max-width:420px;
+      padding:30px 24px;
       border-radius:20px;
-      box-shadow:0 10px 25px rgba(0,0,0,0.08);
+      box-shadow:0 10px 25px rgba(0,0,0,0.10);
+      text-align:center;
+      backdrop-filter:blur(2px);
     }
 
-    h1{
-      margin:0 0 14px;
+    .icon{
+      width:70px;
+      height:auto;
+      margin-bottom:16px;
+      animation:pulse 2s infinite;
+    }
+
+    @keyframes pulse{
+      0%,100%{transform:scale(1);}
+      50%{transform:scale(1.08);}
+    }
+
+    h2{
       font-family:'Playfair Display',serif;
       color:var(--viola);
+      margin:0 0 10px;
+      font-size:30px;
     }
 
     p{
       margin:0;
-      line-height:1.6;
+      line-height:1.7;
+      font-size:16px;
     }
   </style>
 </head>
+
 <body>
-  <div class="card">
-    <h1>Grazie</h1>
-    <p>La tua risposta è stata inviata correttamente.</p>
+
+  <div id="fiori-container"></div>
+
+  <div class="hero">
+    <div class="quote">Quando si è felici bisogna farci caso</div>
+    <h1>Federica & Eugenio</h1>
   </div>
+
+  <div class="container">
+    <div class="card">
+      <img src="FIORI_BIANCHI.png" class="icon" alt="">
+      <h2>Grazie</h2>
+      <p>
+        La tua risposta è stata inviata correttamente.<br><br>
+        Non vediamo l’ora di festeggiare insieme a te 💛
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function creaFioreCadente() {
+      const fiore = document.createElement("img");
+      fiore.src = "FIORI_BIANCHI.png";
+      fiore.className = "fiore-cadente";
+      fiore.alt = "";
+
+      fiore.style.left = Math.random() * 100 + "vw";
+
+      const size = 24 + Math.random() * 36;
+      fiore.style.width = size + "px";
+      fiore.style.height = "auto";
+
+      const durata = 9 + Math.random() * 8;
+      fiore.style.animationDuration = durata + "s";
+
+      fiore.style.setProperty("--drift-x", (Math.random() * 160 - 80) + "px");
+      fiore.style.setProperty("--rot-end", (Math.random() * 180 - 90) + "deg");
+
+      const opacity = 0.65 + Math.random() * 0.3;
+      fiore.style.opacity = opacity;
+
+      document.getElementById("fiori-container").appendChild(fiore);
+
+      setTimeout(() => fiore.remove(), (durata + 2) * 1000);
+    }
+
+    setInterval(creaFioreCadente, 450);
+
+    for(let i = 0; i < 12; i++){
+      setTimeout(creaFioreCadente, i * 180);
+    }
+  </script>
+
 </body>
 </html>
