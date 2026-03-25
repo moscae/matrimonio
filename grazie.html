@@ -1,39 +1,58 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grazie</title>
 
-<style>
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  color:white;
-  font-family:'Playfair Display',serif;
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-  background-image:url("sfondo.jpg");
-  background-size:cover;
-  background-position:center;
-}
+  <style>
+    :root{
+      --viola:#8C3A5D;
+      --pesca:#F2B38A;
+      --crema:#FFF8F2;
+    }
 
-.overlay{
-  background:rgba(0,0,0,0.4);
-  padding:30px;
-  border-radius:20px;
-}
-</style>
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-family:'Inter',sans-serif;
+      background:linear-gradient(180deg,var(--pesca),var(--crema));
+      color:#2E2A26;
+      padding:24px;
+      box-sizing:border-box;
+    }
+
+    .card{
+      background:white;
+      max-width:420px;
+      width:100%;
+      padding:32px 24px;
+      border-radius:20px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    h1{
+      margin:0 0 14px;
+      font-family:'Playfair Display',serif;
+      color:var(--viola);
+    }
+
+    p{
+      margin:0;
+      line-height:1.6;
+    }
+  </style>
 </head>
-
 <body>
-
-<div class="overlay">
-  <h1>Grazie ❤️</h1>
-  <p>Non vediamo l’ora di festeggiare insieme!</p>
-</div>
-
+  <div class="card">
+    <h1>Grazie</h1>
+    <p>La tua risposta è stata inviata correttamente.</p>
+  </div>
 </body>
 </html>

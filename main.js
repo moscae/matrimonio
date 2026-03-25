@@ -1,79 +1,113 @@
 // main.js
 let firstGuestBambini = true;
 
-/* PETALI */
-function creaPetalo() {
-  const petalo = document.createElement("div");
-  petalo.className = "petalo";
-
-  petalo.style.left = Math.random() * 100 + "vw";
-
-  const durata = 6 + Math.random() * 6;
-  petalo.style.animationDuration = durata + "s";
-
-  const size = 10 + Math.random() * 12;
-  petalo.style.width = size + "px";
-  petalo.style.height = size * 1.4 + "px";
-
-  const colori = ["#ffffff", "#f8eaea", "#f3e5f5"];
-  petalo.style.background = colori[Math.floor(Math.random() * colori.length)];
-
-  document.getElementById("petali-container").appendChild(petalo);
-
-  setTimeout(() => petalo.remove(), durata * 1000);
-}
-setInterval(creaPetalo, 350);
-
-/* FIORI LATERALI RANDOM */
-function creaFiore() {
+/* =========================
+   FIORI CHE CADONO
+========================= */
+function creaFioreCadente() {
   const fiore = document.createElement("img");
-  fiore.src = "FIORI_BIANCHI.png";  // sostituire con immagine reale
-  fiore.className = "fiore";
+  fiore.src = "FIORI_BIANCHI.png";
+  fiore.className = "fiore-cadente";
+  fiore.alt = "";
 
-  const lato = Math.random() < 0.5 ? "left" : "right";
-  fiore.style[lato] = "10px";
-  fiore.style.top = 50 + Math.random() * 400 + "px";
-  fiore.style.width = 40 + Math.random() * 30 + "px";
+  fiore.style.left = Math.random() * 100 + "vw";
 
-  const durata = (6 + Math.random() * 6) + "s";
-  fiore.style.animationDuration = durata;
+  const size = 24 + Math.random() * 36;
+  fiore.style.width = size + "px";
+  fiore.style.height = "auto";
+
+  const durata = 9 + Math.random() * 8;
+  fiore.style.animationDuration = durata + "s";
+
+  const drift = (Math.random() * 160 - 80).toFixed(0) + "px";
+  fiore.style.setProperty("--drift-x", drift);
+
+  const rot = (Math.random() * 180 - 90).toFixed(0) + "deg";
+  fiore.style.setProperty("--rot-end", rot);
+
+  const delay = (Math.random() * 2).toFixed(2) + "s";
+  fiore.style.animationDelay = delay;
+
+  const opacity = 0.65 + Math.random() * 0.3;
+  fiore.style.opacity = opacity;
 
   document.getElementById("fiori-container").appendChild(fiore);
 
-  setTimeout(() => fiore.remove(), parseFloat(durata) * 1000);
+  setTimeout(() => fiore.remove(), (durata + 2) * 1000);
 }
-setInterval(creaFiore, 1500);
 
-/* FORM */
+// più fiori e più frequenti
+setInterval(creaFioreCadente, 450);
+
+// piccolo avvio iniziale per riempire subito la pagina
+for (let i = 0; i < 12; i++) {
+  setTimeout(creaFioreCadente, i * 180);
+}
+
+/* =========================
+   UI
+========================= */
+function mostraLoading() {
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.classList.add("show");
+}
+
+function nascondiLoading() {
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.classList.remove("show");
+}
+
+function mostraErrore(msg) {
+  const box = document.getElementById("errorBox");
+  box.textContent = msg;
+  box.style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function nascondiErrore() {
+  const box = document.getElementById("errorBox");
+  box.style.display = "none";
+  box.textContent = "";
+}
+
+/* =========================
+   FORM
+========================= */
 function aggiungiInvitato() {
   const container = document.getElementById("guests");
   const div = document.createElement("div");
   div.className = "guest";
 
   let html = `
-<input class="nome" placeholder="Nome">
-<input class="cognome" placeholder="Cognome">
-<select class="presenza">
-<option value="SI">Parteciperò</option>
-<option value="NO">Non partecipo</option>
-</select>
-<select class="menu">
-<option value="">Menu</option>
-<option value="Carne">Carne</option>
-<option value="Vegetariano">Vegetariano</option>
-</select>
-<textarea class="intolleranze" placeholder="Allergie/intolleranze"></textarea>
-`;
+    <input class="nome" placeholder="Nome" autocomplete="off">
+    <input class="cognome" placeholder="Cognome" autocomplete="off">
 
-  if(firstGuestBambini){
+    <select class="presenza">
+      <option value="SI">Parteciperò</option>
+      <option value="NO">Non partecipo</option>
+    </select>
+
+    <select class="menu">
+      <option value="">Menu</option>
+      <option value="Carne">Carne</option>
+      <option value="Vegetariano">Vegetariano</option>
+    </select>
+
+    <textarea class="intolleranze" placeholder="Allergie/intolleranze"></textarea>
+  `;
+
+  if (firstGuestBambini) {
     html += `
-<label class="label">Numero bambini (<6 anni)</label>
-<input class="bambini" type="number" min="0">
-<label class="label">Numero di Seggioloni necessari</label>
-<input class="seggiolone" type="number" min="0" value="0" style="display:none">
-`;
+      <label class="label bambini-label">Numero bambini (&lt;6 anni)</label>
+      <input class="bambini" type="number" min="0" value="0" inputmode="numeric">
+
+      <div class="seggiolone-wrap" style="display:none;">
+        <label class="label">Numero di Seggioloni necessari</label>
+        <input class="seggiolone" type="number" min="0" value="0" inputmode="numeric">
+      </div>
+    `;
   } else {
-    html += `<button class="remove-btn" onclick="rimuoviInvitato(this)">✖</button>`;
+    html += `<button type="button" class="remove-btn" onclick="rimuoviInvitato(this)">✖</button>`;
   }
 
   div.innerHTML = html;
@@ -82,69 +116,171 @@ function aggiungiInvitato() {
   const presenza = div.querySelector(".presenza");
   const menu = div.querySelector(".menu");
 
-  presenza.addEventListener("change", () => {
-    menu.style.display = presenza.value === "SI" ? "block" : "none";
-    if (presenza.value !== "SI") menu.value = "";
-  });
+  function aggiornaMenu() {
+    if (presenza.value === "SI") {
+      menu.style.display = "block";
+    } else {
+      menu.style.display = "none";
+      menu.value = "";
+    }
+  }
+
+  presenza.addEventListener("change", aggiornaMenu);
+  aggiornaMenu();
 
   if (firstGuestBambini) {
-  const bambini = div.querySelector(".bambini");
-  const seggiolone = div.querySelector(".seggiolone");
+    const bambini = div.querySelector(".bambini");
+    const seggioloneWrap = div.querySelector(".seggiolone-wrap");
+    const seggiolone = div.querySelector(".seggiolone");
 
-  // Inizialmente nascosto
-  seggiolone.style.display = "none";
+    function aggiornaSeggiolone() {
+      const val = parseInt(bambini.value, 10) || 0;
 
-  // Mostra/nascondi seggiolone se bambini > 0
-  bambini.addEventListener("input", () => {
-    const val = parseInt(bambini.value) || 0;
-    if (val > 0) {
-      seggiolone.style.display = "block";
-    } else {
-      seggiolone.style.display = "none";
-      seggiolone.value = 0;
+      if (val > 0) {
+        seggioloneWrap.style.display = "block";
+      } else {
+        seggioloneWrap.style.display = "none";
+        seggiolone.value = 0;
+      }
     }
-  });
 
-  firstGuestBambini = false;
-}
+    bambini.addEventListener("input", aggiornaSeggiolone);
+    bambini.addEventListener("change", aggiornaSeggiolone);
+    aggiornaSeggiolone();
+
+    firstGuestBambini = false;
+  }
 }
 
 function rimuoviInvitato(btn) {
-  btn.parentElement.remove();
+  const guest = btn.closest(".guest");
+  if (guest) guest.remove();
 }
 
-async function invia() {
+function raccogliPayload() {
   const guests = document.querySelectorAll(".guest");
   const payload = [];
 
-  guests.forEach((g,i)=>{
-    const bambini = parseInt(g.querySelector(".bambini")?.value || 0);
-    const seggiolone = parseInt(g.querySelector(".seggiolone")?.value || 0);
+  for (const [i, g] of Array.from(guests).entries()) {
+    const nome = g.querySelector(".nome")?.value.trim() || "";
+    const cognome = g.querySelector(".cognome")?.value.trim() || "";
+    const presenza = g.querySelector(".presenza")?.value || "SI";
+    const menu = g.querySelector(".menu")?.value || "";
+    const intolleranze = g.querySelector(".intolleranze")?.value.trim() || "";
+    const bambini = parseInt(g.querySelector(".bambini")?.value || "0", 10) || 0;
+    const seggiolone = parseInt(g.querySelector(".seggiolone")?.value || "0", 10) || 0;
 
-    if(seggiolone > bambini){
-      alert("Seggioloni non validi");
-      return;
+    if (!nome || !cognome) {
+      throw new Error("Compila nome e cognome per tutti gli invitati.");
+    }
+
+    if (seggiolone > bambini) {
+      throw new Error("Il numero di seggioloni non può essere maggiore del numero di bambini.");
+    }
+
+    if (presenza === "SI" && !menu) {
+      throw new Error(`Seleziona il menu per ${nome} ${cognome}.`);
     }
 
     payload.push({
-      key: "matrimonio-2026-federica-eugenio",
-      nome: g.querySelector(".nome").value,
-      cognome: g.querySelector(".cognome").value,
-      presenza: g.querySelector(".presenza").value,
-      menu: g.querySelector(".menu").value,
-      intolleranze: g.querySelector(".intolleranze").value,
+      key: EVENT_KEY,
+      nome,
+      cognome,
+      presenza,
+      menu: presenza === "SI" ? menu : "",
+      intolleranze,
       bambini: i === 0 ? bambini : 0,
       seggiolone: i === 0 ? seggiolone : 0
     });
-  });
+  }
 
-  await fetch(API_URL, {
-    method:"POST",
-    body: JSON.stringify(payload),
-    headers: {"Content-Type":"application/json"}
-  });
-
-  window.location.href="grazie.html";
+  return payload;
 }
 
-window.onload = () => aggiungiInvitato();
+/* =========================
+   FETCH CON TIMEOUT
+========================= */
+async function postConTimeout(url, options = {}, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+
+    return response;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* =========================
+   INVIO
+========================= */
+async function invia() {
+  nascondiErrore();
+
+  let payload;
+  try {
+    payload = raccogliPayload();
+  } catch (err) {
+    mostraErrore(err.message || "Controlla i dati inseriti.");
+    return;
+  }
+
+  mostraLoading();
+
+  try {
+    const response = await postConTimeout(
+      API_URL,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          key: EVENT_KEY,
+          invitati: payload
+        })
+      },
+      API_TIMEOUT_MS
+    );
+
+    if (!response.ok) {
+      throw new Error(`Errore server (${response.status}).`);
+    }
+
+    let result = null;
+    const text = await response.text();
+
+    try {
+      result = text ? JSON.parse(text) : null;
+    } catch {
+      throw new Error("La risposta del server non è valida.");
+    }
+
+    // atteso: { success: true }
+    if (!result || result.success !== true) {
+      const apiMessage =
+        result?.message ||
+        "Il salvataggio non è andato a buon fine. Controlla lo script collegato al Google Sheet.";
+      throw new Error(apiMessage);
+    }
+
+    window.location.href = "grazie.html";
+  } catch (err) {
+    if (err.name === "AbortError") {
+      mostraErrore("La richiesta ha impiegato troppo tempo. Riprova tra poco.");
+    } else {
+      mostraErrore(err.message || "Si è verificato un errore durante il salvataggio.");
+    }
+  } finally {
+    nascondiLoading();
+  }
+}
+
+window.onload = () => {
+  aggiungiInvitato();
+};
