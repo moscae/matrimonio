@@ -87,22 +87,26 @@ function aggiungiInvitato() {
     if (presenza.value !== "SI") menu.value = "";
   });
 
-  if(firstGuestBambini){
-    const bambini = div.querySelector(".bambini");
-    const seggiolone = div.querySelector(".seggiolone");
+  if (firstGuestBambini) {
+  const bambini = div.querySelector(".bambini");
+  const seggiolone = div.querySelector(".seggiolone");
 
-    bambini.addEventListener("input", () => {
-      const val = parseInt(bambini.value) || 0;
-      if(val > 1){
-        seggiolone.style.display = "block";
-      } else {
-        seggiolone.style.display = "none";
-        seggiolone.value = 0;
-      }
-    });
+  // Inizialmente nascosto
+  seggiolone.style.display = "none";
 
-    firstGuestBambini = false;
-  }
+  // Mostra/nascondi seggiolone se bambini > 0
+  bambini.addEventListener("input", () => {
+    const val = parseInt(bambini.value) || 0;
+    if (val > 0) {
+      seggiolone.style.display = "block";
+    } else {
+      seggiolone.style.display = "none";
+      seggiolone.value = 0;
+    }
+  });
+
+  firstGuestBambini = false;
+}
 }
 
 function rimuoviInvitato(btn) {
