@@ -65,6 +65,7 @@ function aggiungiInvitato() {
       <option value="">Menu</option>
       <option value="Carne">Carne</option>
       <option value="Vegetariano">Vegetariano</option>
+      <option value="Senza Glutine">Senza Glutine</option>
     </select>
 
     <textarea class="intolleranze" placeholder="Allergie/intolleranze"></textarea>
